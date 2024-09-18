@@ -1,2 +1,2 @@
 # Webec
-Repository for assignments
+Repository for assignments of Livia Stöcklin
