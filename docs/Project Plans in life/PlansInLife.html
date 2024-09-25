@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-//A web solution to keep track of your plans in life.
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -35,6 +34,73 @@
       margin: 5px 0;
       padding: 10px;
       border-left: 5px solid #4CAF50;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: move;
+      transition: background-color 0.2s ease;
+    }
+
+    /* Highlight while dragging */
+    li.dragging {
+      background-color: #e0e0e0;
+      opacity: 0.7;
+    }
+
+    .actions {
+      margin-left: 10px;
+    }
+
+    /* Style for the Remove button */
+    button {
+      background-color: #ddd;
+      border: none;
+      padding: 5px 10px;
+      color: #333;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    button:hover {
+      background-color: #bbb;
+    }
+
+    /* Form styles */
+    label {
+      font-weight: normal;
+      color: #555;
+    }
+
+    input[type="text"], select {
+      padding: 8px;
+      margin-right: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    select {
+      font-size: 14px;
+      color: #555;
+    }
+
+    input[type="text"]:focus, select:focus {
+      border-color: #888;
+    }
+
+    button.add {
+      background-color: #4CAF50;
+      color: white;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button.add:hover {
+      background-color: #45a049;
     }
   </style>
 </head>
@@ -43,36 +109,120 @@
 
 <h1>My Plans in Life</h1>
 
+<!-- Form to add new items -->
+<section>
+  <h2>Add a New Item</h2>
+  <label for="section">Choose a section:</label>
+  <select id="section">
+    <option value="goals">Personal Goals</option>
+    <option value="plans">Career Plans</option>
+    <option value="aspirations">Long-term Aspirations</option>
+  </select>
+  <input type="text" id="newItem" placeholder="New item...">
+  <button class="add" onclick="addItem()">Add</button>
+</section>
+
 <!-- Personal Goals Section -->
 <section>
   <h2>Personal Goals</h2>
-  <ul>
-    <li>Travel to Japan by 2025</li>
-    <li>Learn a new language (Spanish)</li>
-    <li>Exercise regularly - 3 times a week</li>
+  <ul id="goals">
+    <li draggable="true">Travel to Japan by 2025 <span class="actions"><button onclick="removeItem(this)">Remove</button></span></li>
+    <li draggable="true">Learn a new language (Spanish) <span class="actions"><button onclick="removeItem(this)">Remove</button></span></li>
+    <li draggable="true">Exercise regularly - 3 times a week <span class="actions"><button onclick="removeItem(this)">Remove</button></span></li>
   </ul>
 </section>
 
 <!-- Career Plans Section -->
 <section>
   <h2>Career Plans</h2>
-  <ul>
-    <li>Finish my Bachelor in Computer Science by 2025</li>
-    <li>Get a job as a software engineer</li>
-    <li>Develop a personal portfolio website</li>
+  <ul id="plans">
+    <li draggable="true">Finish my Bachelor in Computer Science by 2025 <span class="actions"><button onclick="removeItem(this)">Remove</button></span></li>
+    <li draggable="true">Get a job as a software engineer <span class="actions"><button onclick="removeItem(this)">Remove</button></span></li>
+    <li draggable="true">Develop a personal portfolio website <span class="actions"><button onclick="removeItem(this)">Remove</button></span></li>
   </ul>
 </section>
 
 <!-- Long-term Aspirations Section -->
 <section>
   <h2>Long-term Aspirations</h2>
-  <ul>
-    <li>Buy a house within the next 10 years</li>
-    <li>Start my own tech company</li>
-    <li>Work remotely and travel the world</li>
+  <ul id="aspirations">
+    <li draggable="true">Buy a house within the next 10 years <span class="actions"><button onclick="removeItem(this)">Remove</button></span></li>
+    <li draggable="true">Start my own tech company <span class="actions"><button onclick="removeItem(this)">Remove</button></span></li>
+    <li draggable="true">Work remotely and travel the world <span class="actions"><button onclick="removeItem(this)">Remove</button></span></li>
   </ul>
 </section>
 
-</body>
+<script>
+  // Function to add a new item
+  function addItem() {
+    const section = document.getElementById('section').value;
+    const newItemText = document.getElementById('newItem').value;
 
+    if (newItemText.trim() === '') return; // Don't add empty items
+
+    const ul = document.getElementById(section);
+    const li = document.createElement('li');
+    li.setAttribute('draggable', 'true');
+    li.innerHTML = `${newItemText} <span class="actions"><button onclick="removeItem(this)">Remove</button></span>`;
+    ul.appendChild(li);
+
+    // Add drag event listeners
+    addDragAndDropEvents(li);
+
+    document.getElementById('newItem').value = ''; // Clear input
+  }
+
+  // Function to remove an item
+  function removeItem(button) {
+    const li = button.parentElement.parentElement;
+    li.remove();
+  }
+
+  // Add drag and drop functionality
+  function addDragAndDropEvents(item) {
+    item.addEventListener('dragstart', () => {
+      item.classList.add('dragging');
+    });
+
+    item.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+    });
+
+    const uls = document.querySelectorAll('ul');
+
+    uls.forEach(ul => {
+      ul.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        const draggingItem = document.querySelector('.dragging');
+        const afterElement = getDragAfterElement(ul, e.clientY);
+        if (afterElement == null) {
+          ul.appendChild(draggingItem);
+        } else {
+          ul.insertBefore(draggingItem, afterElement);
+        }
+      });
+    });
+  }
+
+  function getDragAfterElement(ul, y) {
+    const draggableElements = [...ul.querySelectorAll('li:not(.dragging)')];
+
+    return draggableElements.reduce((closest, child) => {
+      const box = child.getBoundingClientRect();
+      const offset = y - box.top - box.height / 2;
+      if (offset < 0 && offset > closest.offset) {
+        return { offset: offset, element: child };
+      } else {
+        return closest;
+      }
+    }, { offset: Number.NEGATIVE_INFINITY }).element;
+  }
+
+  // Initialize drag and drop events for existing items
+  document.querySelectorAll('li').forEach(item => {
+    addDragAndDropEvents(item);
+  });
+</script>
+
+</body>
 </html>
