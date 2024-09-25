@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Your Favorite HTML Resource</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        textarea {
+            font: inherit;
+            width: 100%;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            padding-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .formatting{
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Submit Your Favorite HTML Resource</h1>
+
+<div class="formatting">
+</div>
+
+<form action="mailto:dierk.koenig@fhnw.ch" method="post" enctype="text/plain">
+    <label for="resource">Link to HTML Resource:</label>
+    <input type="text" id="resource" name="resource" placeholder="Enter the URL of the resource">
+
+    <label for="description">Why do you like this resource?</label>
+    <textarea id="description" name="description" rows="4" placeholder="Describe why this resource is helpful to you"></textarea>
+
+    <input type="submit" value="Submit">
+</form>
+
+</body>
+
+</html>
